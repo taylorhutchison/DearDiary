@@ -1,1 +1,19 @@
-<p>newentries works!</p>
+<h2>New Diary Entry</h2>
+
+<ng-container *ngIf="diaryForm">
+    <form [formGroup]="diaryForm">
+        <mat-form-field>
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Entry</mat-label>
+            <textarea matInput formControlName="notes"></textarea>
+        </mat-form-field>
+        <ng-container *ngFor="let indicator of indicators">
+            <app-indicator-form (removeIndicator)="removeIndicator(indicator)"></app-indicator-form>
+        </ng-container>
+        <button mat-stroked-button (click)="addIndicator()">Add Indicator</button>
+        <button mat-stroked-button (click)="save()">Save</button>
+    </form>
+</ng-container>
