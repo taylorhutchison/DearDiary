@@ -34,6 +34,10 @@ export class NewentriesComponent implements OnInit {
     this.indicators.splice(index, 1);
   }
 
+  addSelfie() {
+
+  }
+
   save() {
     console.log(this.diaryForm!.value);
     const x = this.indicatorForms?.map(form => form.indicatorForm.value);

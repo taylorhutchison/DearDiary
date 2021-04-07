@@ -5,6 +5,7 @@
             <input matInput formControlName="name">
         </mat-form-field>
         <mat-slider min="0" max="100" step="1" formControlName="value"></mat-slider>
+        <span>{{val}}</span>
         <button mat-stroked-button (click)="remove()">Remove</button>
     </form>
 </ng-container>

@@ -8,12 +8,12 @@ export class StorageService {
   dbName: string = "diaryStore";
 
   constructor() {
-
-    const db = indexedDB.open(this.dbName);
-    db.onsuccess = (e: Event) => {
-      console.log(e);
+    if (typeof window !== 'undefined' && window.indexedDB) {
+      const db = indexedDB.open(this.dbName);
+      db.onsuccess = (e: Event) => {
+        console.log(e);
+      }
     }
-
 
   }
 

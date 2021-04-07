@@ -13,6 +13,10 @@ export class IndicatorFormComponent implements OnInit {
   @Output()
   removeIndicator = new EventEmitter<void>();
 
+  get val() {
+    return this.indicatorForm.get('value')?.value;
+  }
+
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {

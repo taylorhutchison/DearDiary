@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/diaryapp",
+            "outputPath": "dist/diaryapp/browser",
             "index": "projects/diaryapp/src/index.html",
             "main": "projects/diaryapp/src/main.ts",
             "polyfills": "projects/diaryapp/src/polyfills.ts",
@@ -106,7 +106,8 @@
             "tsConfig": [
               "projects/diaryapp/tsconfig.app.json",
               "projects/diaryapp/tsconfig.spec.json",
-              "projects/diaryapp/e2e/tsconfig.json"
+              "projects/diaryapp/e2e/tsconfig.json",
+              "projects/diaryapp/tsconfig.server.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -122,6 +123,41 @@
           "configurations": {
             "production": {
               "devServerTarget": "diaryapp:serve:production"
+            }
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/diaryapp/server",
+            "main": "projects/diaryapp/src/main.server.ts",
+            "tsConfig": "projects/diaryapp/tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "projects/diaryapp/src/environments/environment.ts",
+                  "with": "projects/diaryapp/src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
+          }
+        },
+        "app-shell": {
+          "builder": "@angular-devkit/build-angular:app-shell",
+          "options": {
+            "browserTarget": "diaryapp:build",
+            "serverTarget": "diaryapp:server",
+            "route": "shell"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "diaryapp:build:production",
+              "serverTarget": "diaryapp:server:production"
             }
           }
         }
