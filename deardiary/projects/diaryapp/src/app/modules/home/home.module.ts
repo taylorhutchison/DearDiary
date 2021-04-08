@@ -11,10 +11,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { EntryListComponent } from './components/entry-list/entry-list.component';
 
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, EntryListComponent],
   imports: [
     CommonModule,
     HomeRoutingModule,
@@ -23,7 +25,8 @@ import { MatTableModule } from '@angular/material/table';
     MatIconModule,
     MatTableModule,
     MatSnackBarModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTooltipModule
   ]
 })
 export class HomeModule { }

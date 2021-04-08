@@ -1,0 +1,9 @@
+.addnewentry {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    .label {
+        margin: 0 10px;
+    }
+}
