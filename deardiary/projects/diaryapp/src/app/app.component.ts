@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NetworkService } from './services/network.service';
+import { NotificationService } from './services/notification.service';
 import { StorageService } from './services/storage.service';
 
 @Component({
@@ -6,8 +8,20 @@ import { StorageService } from './services/storage.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'diaryapp';
-  constructor(private store: StorageService) {
+  isOnline: boolean = false;
+  constructor(private store: StorageService, private notificationService: NotificationService, private networkService: NetworkService) {
+  }
+
+  ngOnInit() {
+    this.networkService.monitorNetworkStatus().subscribe(isOnline => {
+      this.isOnline = isOnline;
+      if (isOnline) {
+        this.notificationService.notify('Application is online');
+      } else {
+        this.notificationService.notify('Offline mode enabled');
+      }
+    });
   }
 }

@@ -15,3 +15,21 @@ nav {
         font-size: 15px;
     }
 }
+
+.onlineIndicator {
+    position: absolute;
+    right: 0;
+    div {
+        display: flex;
+        align-items: center;
+    }
+    span {
+        font-size: 12px;
+    }
+    .online {
+        color: rgb(0, 126, 0);
+    }
+    .offline {
+        color: rgb(255, 189, 45);
+    }
+}

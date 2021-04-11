@@ -5,6 +5,16 @@
             <a routerLink="/home">Home</a>
             <a routerLink="/entry/new">New</a>
         </nav>
+        <div class="onlineIndicator">
+            <div *ngIf="isOnline" class="online">
+                <mat-icon>sensors</mat-icon>
+                <span>Online</span>
+            </div>
+            <div *ngIf="!isOnline" class="offline">
+                <mat-icon>sensors_off</mat-icon>
+                <span>Offline</span>
+            </div>
+        </div>
     </mat-toolbar>
 </header>
 
