@@ -34,13 +34,33 @@ export class StorageService {
   }
 
 
-  async addItem(value: Partial<{ entryId: string }>): Promise<any> {
+  async addOrUpdateItem(value: Partial<{ entryId: string }>): Promise<any> {
     try {
       return new Promise(async (res, rej) => {
         const db = await this.getDB(this.dbName);
         const transaction = db.transaction('entries', 'readwrite');
         const store = transaction.objectStore('entries');
-        const request = store.add(value);
+        const request = store.put(value);
+        request.onsuccess = () => {
+          res(request.result);
+        }
+        request.onerror = (e) => {
+          rej(e);
+        }
+      })
+    }
+    catch (err) {
+      console.error(err);
+    }
+  }
+
+  async getItem(entryId: string): Promise<any> {
+    try {
+      return new Promise(async (res, rej) => {
+        const db = await this.getDB(this.dbName);
+        const transaction = db.transaction('entries', 'readwrite');
+        const store = transaction.objectStore('entries');
+        const request = store.get(entryId);
         request.onsuccess = () => {
           res(request.result);
         }

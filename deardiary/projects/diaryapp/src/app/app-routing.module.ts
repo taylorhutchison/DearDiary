@@ -5,7 +5,7 @@ import { AppShellComponent } from './app-shell/app-shell.component';
 const routes: Routes = [
   { path: 'shell', component: AppShellComponent },
   { path: 'home', loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule) },
-  { path: 'new', loadChildren: () => import('./modules/newentries/newentries.module').then(m => m.NewentriesModule) },
+  { path: 'entry', loadChildren: () => import('./modules/entry/entry.module').then(m => m.EntryModule) },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' }
 ];

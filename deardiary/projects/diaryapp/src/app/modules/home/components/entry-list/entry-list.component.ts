@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-entry-list',
@@ -10,11 +11,16 @@ export class EntryListComponent implements OnInit {
   @Input()
   entries: any[] = [];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
-  displayedColumns: string[] = ['title', 'excerpt', 'dateCreated'];
+  displayedColumns: string[] = ['title', 'excerpt', 'dateCreated', 'edit'];
 
   ngOnInit(): void {
+  }
+
+  edit(entry: any) {
+    console.log(entry.entryId);
+    this.router.navigateByUrl('/entry/' + entry.entryId);
   }
 
 }

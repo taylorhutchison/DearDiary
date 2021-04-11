@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { NewentriesRoutingModule } from './newentries-routing.module';
-import { NewentriesComponent } from './components/newentries/newentries.component';
+import { NewentriesRoutingModule } from './entry-routing.module';
+import { EntryFormComponent } from './components/entry-form/entry-form.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,7 @@ import { IndicatorFormComponent } from './components/indicator-form/indicator-fo
 
 
 @NgModule({
-  declarations: [NewentriesComponent, IndicatorFormComponent],
+  declarations: [EntryFormComponent, IndicatorFormComponent],
   imports: [
     CommonModule,
     NewentriesRoutingModule,
@@ -29,4 +29,4 @@ import { IndicatorFormComponent } from './components/indicator-form/indicator-fo
     ReactiveFormsModule
   ]
 })
-export class NewentriesModule { }
+export class EntryModule { }
