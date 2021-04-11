@@ -30,10 +30,10 @@ export class AppComponent implements OnInit {
     });
 
     this.updates.available.subscribe(event => {
-      this.notificationService.notify(`An update is available. Current version ${event.current}. Available version ${event.available}.`);
+      this.notificationService.notify(`An update is available. Current version ${event.current?.hash}. Available version ${event.available?.hash}.`);
     });
     this.updates.activated.subscribe(event => {
-      this.notificationService.notify(`App Updated. Old version was ${event.previous}. Available version ${event.current}.`);
+      this.notificationService.notify(`App Updated. Old version was ${event.previous?.hash}. Available version ${event.current?.hash}.`);
     });
   }
 }
