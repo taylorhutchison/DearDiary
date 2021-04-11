@@ -14,7 +14,8 @@
             <img src="{{selfie}}" />
         </ng-container>
         <ng-container *ngFor="let indicator of indicators">
-            <app-indicator-form (removeIndicator)="removeIndicator(indicator)"></app-indicator-form>
+            <app-indicator-form [indicator]="indicator" (removeIndicator)="removeIndicator(indicator)">
+            </app-indicator-form>
         </ng-container>
         <button mat-stroked-button (click)="addIndicator()">Add Indicator</button>
         <button mat-stroked-button (click)="addSelfie()">Add Selfie</button>

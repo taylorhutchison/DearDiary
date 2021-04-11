@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -10,6 +10,9 @@ export class IndicatorFormComponent implements OnInit {
 
   indicatorForm!: FormGroup;
 
+  @Input()
+  indicator: any;
+
   @Output()
   removeIndicator = new EventEmitter<void>();
 
@@ -20,10 +23,17 @@ export class IndicatorFormComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.indicatorForm = this.fb.group({
-      name: '',
-      value: 0
-    });
+    if (this.indicator) {
+      this.indicatorForm = this.fb.group({
+        name: this.indicator.name,
+        value: this.indicator.value
+      });
+    } else {
+      this.indicatorForm = this.fb.group({
+        name: '',
+        value: 0
+      });
+    }
   }
 
   remove() {

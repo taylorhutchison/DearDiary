@@ -19,7 +19,6 @@ export class EntryListComponent implements OnInit {
   }
 
   edit(entry: any) {
-    console.log(entry.entryId);
     this.router.navigateByUrl('/entry/' + entry.entryId);
   }
 

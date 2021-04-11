@@ -41,6 +41,7 @@ export class EntryFormComponent implements OnInit {
       } else {
         this.entry = await this.storeService.getItem(entryId);
         this.selfie = this.entry.selfie;
+        this.indicators = this.entry.indicators;
         this.diaryForm = this.fb.group({
           title: this.entry.title,
           notes: this.entry.notes,
@@ -80,7 +81,7 @@ export class EntryFormComponent implements OnInit {
       dateCreated: this.entry ? this.entry.dateCreated : new Date(),
       ...this.diaryForm!.value,
       selfie: this.selfie,
-      indicators
+      indicators: indicators
     };
     await this.storeService.addOrUpdateItem(item);
     this.router.navigateByUrl('/home');
