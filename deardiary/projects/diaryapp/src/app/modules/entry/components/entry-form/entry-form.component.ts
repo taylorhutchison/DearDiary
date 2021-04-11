@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { StorageService } from 'projects/diaryapp/src/app/services/storage.service';
 import { IndicatorFormComponent } from '../indicator-form/indicator-form.component';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SelfieComponent } from '../selfie/selfie.component';
 
 @Component({
   selector: 'app-entry-form',
@@ -18,9 +20,15 @@ export class EntryFormComponent implements OnInit {
 
   indicators: any[] = [];
 
+  selfie: any;
+
   private entry: any;
 
-  constructor(private fb: FormBuilder, private storeService: StorageService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private fb: FormBuilder,
+    private storeService: StorageService,
+    private route: ActivatedRoute,
+    private router: Router,
+    public dialog: MatDialog) { }
 
   async ngOnInit() {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
@@ -32,9 +40,11 @@ export class EntryFormComponent implements OnInit {
         });
       } else {
         this.entry = await this.storeService.getItem(entryId);
+        this.selfie = this.entry.selfie;
         this.diaryForm = this.fb.group({
           title: this.entry.title,
-          notes: this.entry.notes
+          notes: this.entry.notes,
+          selfie: this.entry.selfie
         });
       }
     });
@@ -51,7 +61,15 @@ export class EntryFormComponent implements OnInit {
   }
 
   addSelfie() {
+    const dialogRef = this.dialog.open(SelfieComponent, {
+      height: '777px'
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.selfie = result;
+      }
+    });
   }
 
   async save() {
@@ -61,6 +79,7 @@ export class EntryFormComponent implements OnInit {
       entryId: this.entry ? this.entry.entryId : guid,
       dateCreated: this.entry ? this.entry.dateCreated : new Date(),
       ...this.diaryForm!.value,
+      selfie: this.selfie,
       indicators
     };
     await this.storeService.addOrUpdateItem(item);

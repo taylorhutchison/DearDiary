@@ -1,0 +1,23 @@
+.selfieContainer {
+    position: relative;
+    .capture {
+        width: 70px;
+        height: 70px;
+        background-color: rgb(190, 86, 86);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 35px;
+        position: absolute;
+        bottom: 40px;
+        left: calc(50% - 35px);
+        color: #fff;
+        font-size: 64px;
+    }
+    mat-icon {
+        height: 50px;
+        width: 50px;
+        font-size: 50px;
+        cursor: pointer;
+    }
+}

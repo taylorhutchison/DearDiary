@@ -10,6 +10,9 @@
             <mat-label>Entry</mat-label>
             <textarea matInput formControlName="notes"></textarea>
         </mat-form-field>
+        <ng-container *ngIf="selfie">
+            <img src="{{selfie}}" />
+        </ng-container>
         <ng-container *ngFor="let indicator of indicators">
             <app-indicator-form (removeIndicator)="removeIndicator(indicator)"></app-indicator-form>
         </ng-container>
