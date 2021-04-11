@@ -1,5 +1,5 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { StorageService } from 'projects/diaryapp/src/app/services/storage.service';
 import { IndicatorFormComponent } from '../indicator-form/indicator-form.component';
@@ -35,8 +35,8 @@ export class EntryFormComponent implements OnInit {
       const entryId = params.get('entryId');
       if (entryId == null || entryId == 'new') {
         this.diaryForm = this.fb.group({
-          title: '',
-          notes: ''
+          title: ['', Validators.required],
+          notes: ['', Validators.required]
         });
       } else {
         this.entry = await this.storeService.getItem(entryId);
