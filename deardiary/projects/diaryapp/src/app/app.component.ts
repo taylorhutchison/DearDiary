@@ -12,6 +12,9 @@ import { StorageService } from './services/storage.service';
 export class AppComponent implements OnInit {
   title = 'diaryapp';
   isOnline: boolean = false;
+  installable: boolean = false;
+  private deferredPrompt: any;
+
   constructor(private store: StorageService,
     private notificationService: NotificationService,
     private networkService: NetworkService,
@@ -35,5 +38,18 @@ export class AppComponent implements OnInit {
     this.updates.activated.subscribe(event => {
       this.notificationService.notify(`App Updated. Old version was ${event.previous?.hash}. Available version ${event.current?.hash}.`);
     });
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+      this.installable = true;
+      console.log(`'beforeinstallprompt' event was fired.`);
+    });
+  }
+
+  install() {
+    console.log('prompting');
+    console.log(this.deferredPrompt);
+    this.deferredPrompt.prompt();
   }
 }

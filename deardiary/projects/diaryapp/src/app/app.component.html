@@ -5,6 +5,9 @@
             <a routerLink="/home">Home</a>
             <a routerLink="/entry/new">New</a>
         </nav>
+        <div *ngIf="installable" class="install">
+            <a (click)="install()">Install App</a>
+        </div>
         <div class="onlineIndicator">
             <div *ngIf="isOnline" class="online">
                 <mat-icon>sensors</mat-icon>
