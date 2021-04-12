@@ -1,5 +1,10 @@
 <div class="selfieContainer">
     <video autoplay #video height="720"></video>
+    <div class="deviceSelect">
+        <select (change)="changeStream($event)">
+            <option *ngFor="let device of videoDevices" [value]="device.deviceId">{{device.label}}</option>
+        </select>
+    </div>
     <a (click)="capture()">
         <div class="capture">
             <mat-icon>camera_enhance</mat-icon>

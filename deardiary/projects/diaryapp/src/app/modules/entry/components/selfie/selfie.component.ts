@@ -19,6 +19,8 @@ export class SelfieComponent implements OnInit {
 
   stream: MediaStream | undefined;
 
+  videoDevices: any[] = [];
+
   constructor(public dialogRef: MatDialogRef<SelfieComponent>) { }
 
   ngOnInit(): void {
@@ -31,8 +33,21 @@ export class SelfieComponent implements OnInit {
 
   async ngAfterViewInit() {
     try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      this.videoDevices = devices.filter(d => d.kind == "videoinput")
+        .sort((a: MediaDeviceInfo, b: MediaDeviceInfo) => {
+          if (a.label.toLowerCase().indexOf('built-in') != -1) {
+            return -1;
+          }
+          return 0;
+        }).map(d => {
+          return {
+            deviceId: d.deviceId,
+            label: d.label.replace(/\(.*\)/gi, '')
+          }
+        })
       this.stream = await navigator.mediaDevices.getUserMedia({
-        video: true
+        video: { deviceId: this.videoDevices[0].deviceId }
       });
       this.video!.nativeElement.srcObject = this.stream;
     }
@@ -43,12 +58,22 @@ export class SelfieComponent implements OnInit {
 
   capture() {
     const canvas = document.createElement('canvas');
-    canvas.width = 1280;
+    canvas.width = 960;
     canvas.height = 720;
     const context = canvas.getContext('2d');
-    context!.drawImage(this.video!.nativeElement, 0, 0, 1280, 720);
+    context!.drawImage(this.video!.nativeElement, 0, 0, 960, 720);
     const data = canvas.toDataURL('image/jpeg');
     this.dialogRef.close(data);
+  }
+
+  async changeStream(event: any) {
+    const deviceId = event.target.value;
+    this.video!.nativeElement.srcObject = null;
+    this.stream!.getTracks()[0].stop();
+    this.stream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId: deviceId }
+    });
+    this.video!.nativeElement.srcObject = this.stream;
   }
 
 }
