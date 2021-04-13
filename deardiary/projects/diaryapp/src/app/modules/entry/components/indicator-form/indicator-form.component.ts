@@ -16,6 +16,9 @@ export class IndicatorFormComponent implements OnInit {
   @Output()
   removeIndicator = new EventEmitter<void>();
 
+  @Output()
+  updateIndicator = new EventEmitter<any>();
+
   get val() {
     return this.indicatorForm.get('value')?.value;
   }
@@ -38,6 +41,10 @@ export class IndicatorFormComponent implements OnInit {
 
   remove() {
     this.removeIndicator.emit();
+  }
+
+  update() {
+    this.updateIndicator.emit();
   }
 
 }

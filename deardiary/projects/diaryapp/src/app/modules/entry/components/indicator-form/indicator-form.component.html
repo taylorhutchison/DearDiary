@@ -2,10 +2,10 @@
     <form [formGroup]="indicatorForm">
         <mat-form-field>
             <mat-label>Name</mat-label>
-            <input matInput formControlName="name">
+            <input matInput formControlName="name" (change)="update()">
         </mat-form-field>
-        <mat-slider min="0" max="100" step="1" formControlName="value"></mat-slider>
+        <mat-slider min="0" max="100" step="1" formControlName="value" (change)="update()"></mat-slider>
         <span>{{val}}</span>
-        <button mat-stroked-button (click)="remove()">Remove</button>
+        <button mat-button (click)="remove()" color="accent">Remove</button>
     </form>
 </ng-container>

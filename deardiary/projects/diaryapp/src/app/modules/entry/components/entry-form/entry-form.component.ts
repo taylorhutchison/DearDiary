@@ -1,10 +1,11 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { StorageService } from 'projects/diaryapp/src/app/services/storage.service';
 import { IndicatorFormComponent } from '../indicator-form/indicator-form.component';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SelfieComponent } from '../selfie/selfie.component';
+import { Chart, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-entry-form',
@@ -16,11 +17,16 @@ export class EntryFormComponent implements OnInit {
   @ViewChildren(IndicatorFormComponent)
   indicatorForms: QueryList<IndicatorFormComponent> | undefined;
 
+  @ViewChild('chart')
+  chart: ElementRef<HTMLCanvasElement> | undefined;
+
   diaryForm: FormGroup | undefined;
 
   indicators: any[] = [];
 
   selfie: any;
+
+  indicatorChart: Chart | undefined;
 
   private entry: any;
 
@@ -47,18 +53,43 @@ export class EntryFormComponent implements OnInit {
           notes: this.entry.notes,
           selfie: this.entry.selfie
         });
+        this.updateIndicatorChart();
       }
     });
 
+  }
+
+  private updateIndicatorChart() {
+    if (this.indicatorChart) {
+      this.indicatorChart.data.labels = [];
+      (this.indicatorChart.data.datasets[0] as any).data = [];
+      (this.indicatorChart.data.datasets[0] as any).backgroundColor = [];
+      this.indicators.forEach((indicator, index) => {
+        this.indicatorChart!.data!.labels!.push(indicator.name);
+        (this.indicatorChart!.data.datasets[0] as any).data.push(indicator.value);
+        (this.indicatorChart!.data.datasets[0] as any).backgroundColor.push(`hsla(${(index * 55) % 360}, 100%, 50%, 0.5)`);
+      });
+      this.indicatorChart.update();
+    }
   }
 
   addIndicator() {
     this.indicators.push({});
   }
 
+  updateIndicator() {
+    const indicators = this.indicatorForms?.map(form => form.indicatorForm.value);
+    if (indicators) {
+      this.indicators = indicators;
+      this.updateIndicatorChart();
+      console.log(this.indicatorChart!.data);
+    }
+  }
+
   removeIndicator(indicator: any) {
     const index = this.indicators.findIndex((v) => v == indicator);
     this.indicators.splice(index, 1);
+    this.updateIndicatorChart();
   }
 
   addSelfie() {
@@ -85,6 +116,38 @@ export class EntryFormComponent implements OnInit {
     };
     await this.storeService.addOrUpdateItem(item);
     this.router.navigateByUrl('/home');
+  }
+
+  ngAfterViewInit() {
+    Chart.register(...registerables);
+    var ctx = this.chart?.nativeElement!;
+    this.indicatorChart = new Chart(ctx, {
+      type: 'polarArea',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Indicators',
+          data: [],
+          backgroundColor: [
+          ],
+          borderColor: [
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          r: {
+            max: 100,
+            min: 0,
+            ticks: {
+              stepSize: 10
+            }
+          }
+        }
+      }
+    });
+    this.updateIndicatorChart();
   }
 
 }

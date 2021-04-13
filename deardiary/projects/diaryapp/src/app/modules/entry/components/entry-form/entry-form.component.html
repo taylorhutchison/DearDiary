@@ -1,24 +1,41 @@
 <h2>New Diary Entry</h2>
 
-<ng-container *ngIf="diaryForm">
-    <form [formGroup]="diaryForm">
-        <mat-form-field>
-            <mat-label>Title</mat-label>
-            <input matInput formControlName="title">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Entry</mat-label>
-            <textarea matInput formControlName="notes"></textarea>
-        </mat-form-field>
-        <ng-container *ngIf="selfie">
-            <img src="{{selfie}}" />
-        </ng-container>
-        <ng-container *ngFor="let indicator of indicators">
-            <app-indicator-form [indicator]="indicator" (removeIndicator)="removeIndicator(indicator)">
-            </app-indicator-form>
-        </ng-container>
-        <button mat-stroked-button (click)="addIndicator()">Add Indicator</button>
-        <button mat-stroked-button (click)="addSelfie()">Add Selfie</button>
-        <button mat-stroked-button (click)="save()" [disabled]="!diaryForm.valid">Save</button>
-    </form>
-</ng-container>
+<div class="container">
+    <div class="row1">
+        <div class="textContent" *ngIf="diaryForm">
+            <form [formGroup]="diaryForm">
+                <mat-form-field>
+                    <mat-label>Title</mat-label>
+                    <input matInput formControlName="title">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Entry</mat-label>
+                    <textarea matInput formControlName="notes"></textarea>
+                </mat-form-field>
+                <button mat-stroked-button (click)="save()" [disabled]="!diaryForm.valid">Save</button>
+            </form>
+        </div>
+        <div class="imageContent">
+            <button mat-stroked-button (click)="addSelfie()">Add Selfie</button>
+            <ng-container *ngIf="selfie">
+                <img src="{{selfie}}" />
+            </ng-container>
+        </div>
+    </div>
+    <div class="row2">
+        <div class="indicatorContent">
+            <h3>Indicators</h3>
+            <ng-container *ngFor="let indicator of indicators">
+                <app-indicator-form [indicator]="indicator" (updateIndicator)="updateIndicator()"
+                    (removeIndicator)="removeIndicator(indicator)">
+                </app-indicator-form>
+            </ng-container>
+            <button mat-stroked-button (click)="addIndicator()">Add Indicator</button>
+        </div>
+        <div class="chartContent">
+            <canvas #chart width="600" height="600"></canvas>
+        </div>
+    </div>
+
+
+</div>

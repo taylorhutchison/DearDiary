@@ -11,8 +11,8 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$diaryapp-primary: mat-palette($mat-teal, 50);
-$diaryapp-accent: mat-palette($mat-grey, 50);
+$diaryapp-primary: mat-palette($mat-teal, 200);
+$diaryapp-accent: mat-palette($mat-blue, 200);
 
 // The warn palette is optional (defaults to red).
 $diaryapp-warn: mat-palette($mat-pink, 100);
