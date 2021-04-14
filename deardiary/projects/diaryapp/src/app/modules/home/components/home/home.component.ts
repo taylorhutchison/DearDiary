@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   entries = [];
 
   async ngOnInit(): Promise<void> {
-    const entries = await this.store.getAllEntries();
+    const entries = await this.store.getAllEntries() as any;
     this.entries = entries.map((e: any) => {
       return {
         entryId: e.entryId,

@@ -6,6 +6,7 @@ import { IndicatorFormComponent } from '../indicator-form/indicator-form.compone
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SelfieComponent } from '../selfie/selfie.component';
 import { Chart, registerables } from 'chart.js';
+import { createGuid } from 'projects/diaryapp/src/app/lib/utilities/guid';
 
 @Component({
   selector: 'app-entry-form',
@@ -45,7 +46,7 @@ export class EntryFormComponent implements OnInit {
           notes: ['', Validators.required]
         });
       } else {
-        this.entry = await this.storeService.getItem(entryId);
+        this.entry = await this.storeService.getEntry(entryId);
         this.selfie = this.entry.selfie;
         this.indicators = this.entry.indicators;
         this.diaryForm = this.fb.group({
@@ -105,7 +106,7 @@ export class EntryFormComponent implements OnInit {
   }
 
   async save() {
-    const guid = this.storeService.generateEntryKey();
+    const guid = createGuid();
     const indicators = this.indicatorForms?.map(form => form.indicatorForm.value);
     const item = {
       entryId: this.entry ? this.entry.entryId : guid,
@@ -114,7 +115,7 @@ export class EntryFormComponent implements OnInit {
       selfie: this.selfie,
       indicators: indicators
     };
-    await this.storeService.addOrUpdateItem(item);
+    await this.storeService.addOrUpdateEntry(item);
     this.router.navigateByUrl('/home');
   }
 
@@ -148,6 +149,14 @@ export class EntryFormComponent implements OnInit {
       }
     });
     this.updateIndicatorChart();
+  }
+
+  fileChange(event: any) {
+    var reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.selfie = e.target.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
   }
 
 }

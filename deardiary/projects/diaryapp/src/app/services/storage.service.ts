@@ -1,122 +1,55 @@
 import { Injectable } from '@angular/core';
+import { DBConfig } from '../interfaces/DBConfig';
+import { addOrUpdate, query } from '../lib/db/operations';
+import { initialize } from '../lib/db/setup';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
 
-  dbName: string = "diaryStore";
+  private dbConfig: DBConfig = {
+    name: 'diaryDB',
+    stores: [
+      {
+        name: 'entries',
+        keyPath: 'entryId',
+        indexes: []
+      },
+      {
+        name: 'images',
+        keyPath: 'imageId',
+        indexes: [
+          { name: 'entryId', keyPath: 'entryId', config: { unique: false } }
+        ]
+      }
+    ]
+  }
+
+  private initializedDb: Promise<IDBDatabase>;
 
   constructor() {
+    this.initializedDb = initialize(this.dbConfig);
   }
 
-  generateEntryKey(): string {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-    return (
-      s4() +
-      s4() +
-      '-' +
-      s4() +
-      '-' +
-      s4() +
-      '-' +
-      s4() +
-      '-' +
-      s4() +
-      s4() +
-      s4()
-    );
-
+  async addOrUpdateEntry(value: Partial<{ entryId: string }>): Promise<any> {
+    return addOrUpdate(this.initializedDb, 'entries', value);
   }
 
-
-  async addOrUpdateItem(value: Partial<{ entryId: string }>): Promise<any> {
-    try {
-      return new Promise(async (res, rej) => {
-        const db = await this.getDB(this.dbName);
-        const transaction = db.transaction('entries', 'readwrite');
-        const store = transaction.objectStore('entries');
-        const request = store.put(value);
-        request.onsuccess = () => {
-          res(request.result);
-        }
-        request.onerror = (e) => {
-          rej(e);
-        }
-      })
-    }
-    catch (err) {
-      console.error(err);
-    }
+  async getEntry(entryId: string): Promise<IDBRequest<any>> {
+    return query(this.initializedDb, 'entries', (store) => store.get(entryId));
   }
 
-  async getItem(entryId: string): Promise<any> {
-    try {
-      return new Promise(async (res, rej) => {
-        const db = await this.getDB(this.dbName);
-        const transaction = db.transaction('entries', 'readwrite');
-        const store = transaction.objectStore('entries');
-        const request = store.get(entryId);
-        request.onsuccess = () => {
-          res(request.result);
-        }
-        request.onerror = (e) => {
-          rej(e);
-        }
-      })
-    }
-    catch (err) {
-      console.error(err);
-    }
+  async getAllEntries(): Promise<IDBRequest<any>> {
+    return query(this.initializedDb, 'entries', (store) => store.getAll());
   }
 
-  async getAllEntries(): Promise<any> {
-    try {
-      return new Promise(async (res, rej) => {
-        const db = await this.getDB(this.dbName);
-        const transaction = db.transaction('entries', 'readonly');
-        const store = transaction.objectStore('entries');
-        const request = store.getAll();
-        request.onsuccess = () => {
-          res(request.result);
-        }
-        request.onerror = (e) => {
-          rej(e);
-        }
-      })
-    }
-    catch (err) {
-      console.error(err);
-    }
+  async setImage(value: Partial<{ imageId: string, data: string }>): Promise<any> {
+    return addOrUpdate(this.initializedDb, 'images', value);
   }
 
-  private async getDB(dbName: string): Promise<IDBDatabase> {
-    return new Promise((res, rej) => {
-      if (typeof window !== 'undefined' && window.indexedDB) {
-        const dbRequest = indexedDB.open(dbName, 2);
-        dbRequest.onupgradeneeded = (e: any) => {
-          const db = e.target.result;
-          this.createEntryStore(db);
-        }
-        dbRequest.onsuccess = (e: any) => {
-          res(e.target.result);
-        }
-        dbRequest.onerror = (e: Event) => {
-          rej(e);
-        }
-      } else {
-        rej();
-      }
-    });
+  async getImage(imageId: string): Promise<any> {
+    return query(this.initializedDb, 'images', (store) => store.get(imageId));
   }
 
-  private createEntryStore(db: IDBDatabase): void {
-    if (!db.objectStoreNames.contains('entries')) {
-      db.createObjectStore('entries', { keyPath: 'entryId' });
-    }
-  }
 }

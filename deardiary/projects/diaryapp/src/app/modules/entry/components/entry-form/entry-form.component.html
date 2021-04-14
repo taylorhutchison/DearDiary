@@ -17,6 +17,7 @@
         </div>
         <div class="imageContent">
             <button mat-stroked-button (click)="addSelfie()">Add Selfie</button>
+            <input type="file" name="myFile" (change)="fileChange($event)" accept="image/jpeg" />
             <ng-container *ngIf="selfie">
                 <img src="{{selfie}}" />
             </ng-container>
